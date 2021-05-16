@@ -52,6 +52,9 @@ COPY --from=build /usr/local/bin/supertuxkart /usr/local/bin
 COPY --from=build /usr/local/share/supertuxkart /usr/local/share/supertuxkart
 COPY docker-entrypoint.sh docker-entrypoint.sh
 
+# Copy sample config to /stk directory
+COPY server_config.xml /stk/server_config.xml
+
 # Expose the ports used to find and connect to the server
 EXPOSE 2757
 EXPOSE 2759
