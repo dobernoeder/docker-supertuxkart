@@ -31,7 +31,7 @@ fi
 # Start the server
 if [ -n ${SERVER_PASSWORD} ]
 then
-    ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --server-password=${SERVER_PASSWORD}")
+    sed -i 's/^\s*<private-server-password value=\"\" \/>/    <private-server-password value=\"'${SERVER_PASSWORD}'\" \/>/g' current_server_config.xml 
 fi
 
 supertuxkart --server-config=current_server_config.xml "${ADDITIONAL_PARAMETERS}"

@@ -2,7 +2,7 @@
 <server-config version="6" >
 
     <!-- Name of server, encode in XML if you want to use unicode characters. -->
-    <server-name value="STK Server" />
+    <server-name value="STK Server ABC-TEST" />
 
     <!-- Port used in server, if you specify 0, it will use the server port specified in stk_config.xml. If you wish to use a random port, set random-server-port to '1' in user config. STK will automatically switch to a random port if the port you specify fails to be bound. -->
     <server-port value="0" />
