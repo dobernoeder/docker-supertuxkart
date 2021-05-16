@@ -1,0 +1,29 @@
+variables:
+  CI_BUILD_ARCHS: "linux/amd64,linux/arm64,linux/arm/v7"
+  CI_BUILD_IMAGE: "registry.git.obernoeder.net:5050/docker-images/docker-buildx-qemu"
+
+build:
+  image: $CI_BUILD_IMAGE
+  stage: build
+  timeout: 3h 45m
+  services:
+    - name: registry.git.obernoeder.net:5050/docker-images/docker-dind:latest
+      alias: docker
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+#  retry: 2
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    # Use docker-container driver to allow useful features (push/multi-platform)
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - BUILD_CONTAINER=`docker buildx create --driver docker-container --use --driver-opt image=registry.git.obernoeder.net:5050/docker-images/buildkit:latest`
+    - BUILD_CONTAINER="buildx_buildkit_""$BUILD_CONTAINER""0"
+    - docker buildx inspect --bootstrap
+    
+  script:
+    - docker buildx ls
+    - docker buildx build --platform $CI_BUILD_ARCHS --progress plain --pull -t "$CI_REGISTRY_IMAGE" --push .
