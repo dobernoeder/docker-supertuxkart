@@ -2,7 +2,7 @@
 # Build stage
 # -----------
 
-FROM ubuntu:18.04 AS build
+FROM ubuntu:20.04 AS build
 LABEL maintainer=jwestp
 WORKDIR /stk
 
@@ -10,8 +10,9 @@ WORKDIR /stk
 ENV VERSION=1.1
 
 # Install build dependencies
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y build-essential \
+    apt-get install --no-install-recommends -y build-essential \
                        cmake \
                        git \
                        libcurl4-openssl-dev \
@@ -19,7 +20,8 @@ RUN apt-get update && \
                        libssl-dev \
                        pkg-config \
                        subversion \
-                       zlib1g-dev
+                       zlib1g-dev \
+                       ca-certificates
 
 # Get code and assets
 RUN git clone --branch ${VERSION} --depth=1 https://github.com/supertuxkart/stk-code.git
@@ -28,7 +30,7 @@ RUN svn checkout https://svn.code.sf.net/p/supertuxkart/code/stk-assets-release/
 # Build server
 RUN mkdir stk-code/cmake_build && \
     cd stk-code/cmake_build && \
-    cmake .. -DSERVER_ONLY=ON && \
+    cmake .. -DSERVER_ONLY=ON -USE_SYSTEM_ENET=ON && \
     make -j$(nproc) && \
     make install
 
@@ -36,25 +38,22 @@ RUN mkdir stk-code/cmake_build && \
 # Final stage
 # -----------
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 LABEL maintainer=jwestp
 WORKDIR /stk
 
 # Install libcurl dependency
 RUN apt-get update && \
-    apt-get install -y libcurl4-openssl-dev && \
+    apt-get install --no-install-recommends -y libcurl4-openssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy artifacts from build stage
 COPY --from=build /usr/local/bin/supertuxkart /usr/local/bin
 COPY --from=build /usr/local/share/supertuxkart /usr/local/share/supertuxkart
+COPY docker-entrypoint.sh docker-entrypoint.sh
 
-# Expose ports
+# Expose the ports used to find and connect to the server
 EXPOSE 2757
 EXPOSE 2759
 
-# On container startup log in with username and password if given and start the server
-CMD if [ -n ${USERNAME} -a -n ${PASSWORD} ]; then \
-        supertuxkart --init-user --login=${USERNAME} --password=${PASSWORD}; \
-    fi && \
-    supertuxkart --server-config=server_config.xml
+ENTRYPOINT ["/stk/docker-entrypoint.sh"]
