@@ -59,4 +59,4 @@ COPY server_config.xml /stk/server_config.xml
 EXPOSE 2757
 EXPOSE 2759
 
-ENTRYPOINT ["/stk/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "-c", "/stk/docker-entrypoint.sh"]
