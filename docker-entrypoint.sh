@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-/bin/cp /stk/server_config.xml /stk/current_server_config.xml
-
 ADDITIONAL_PARAMETERS=""
 
 if [ -f /stk/USERNAME ]
@@ -34,4 +32,4 @@ then
     ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --server-password=${SERVER_PASSWORD}")
 fi
 
-supertuxkart --server-config=server_config.xml "${ADDITIONAL_PARAMETERS}"
+supertuxkart --server-config=/stk/server_config.xml "${ADDITIONAL_PARAMETERS}"
