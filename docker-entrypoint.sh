@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 /bin/cp /stk/server_config.xml /stk/current_server_config.xml
