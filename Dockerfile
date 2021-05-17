@@ -50,8 +50,8 @@ RUN apt-get update && \
 # Copy artifacts from build stage
 COPY --from=build /usr/local/bin/supertuxkart /usr/local/bin
 COPY --from=build /usr/local/share/supertuxkart /usr/local/share/supertuxkart
-COPY docker-entrypoint.sh /stk/entrypoint.sh
-RUN /usr/bin/chmod 644 /stk && /usr/bin/chmod 751 /stk/* && /usr/bin/chmod 755 /stk/entrypoint.sh
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN /usr/bin/chmod 755 /entrypoint.sh
 
 # Copy sample config to /stk directory
 COPY server_config.xml /stk/server_config.xml
@@ -60,4 +60,4 @@ COPY server_config.xml /stk/server_config.xml
 EXPOSE 2757
 EXPOSE 2759
 
-CMD ["/stk/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
