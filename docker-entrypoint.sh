@@ -3,20 +3,38 @@ set -e
 
 ADDITIONAL_PARAMETERS=""
 
-if [ -f /stk/USERNAME ]
+# Check for Secrets provided by Kubernetes
+if [ -f /stk/username ]
 then
-  USERNAME=$(cat /stk/USERNAME)
+  USERNAME=$(cat /stk/username)
 fi
 
-if [ -f /stk/PASSWORD ]
+if [ -f /stk/password ]
 then
-  PASSWORD=$(cat /stk/PASSWORD)
+  PASSWORD=$(cat /stk/password)
 fi
 
-if [ -f /stk/SERVER_PASSWORD ]
+if [ -f /stk/server_password ]
 then
-  SERVER_PASSWORD=$(cat /stk/SERVER_PASSWORD)
+  SERVER_PASSWORD=$(cat /stk/server_password)
 fi
+
+# Check for Secrets in subfolder provided by Kubernetes
+if [ -f /stk/secrets/username ]
+then
+  USERNAME=$(cat /stk/secrets/username)
+fi
+
+if [ -f /stk/secrets/password ]
+then
+  PASSWORD=$(cat /stk/secrets/password)
+fi
+
+if [ -f /stk/secrets/server_password ]
+then
+  SERVER_PASSWORD=$(cat /stk/secrets/server_password)
+fi
+
 
 
 
