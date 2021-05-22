@@ -18,6 +18,22 @@ if [ -f /stk/server_password ]
 then
   SERVER_PASSWORD=$(cat /stk/server_password)
 fi
+if [ -f /stk/USERNAME ]
+then
+  USERNAME=$(cat /stk/USERNAME)
+fi
+
+if [ -f /stk/PASSWORD ]
+then
+  PASSWORD=$(cat /stk/PASSWORD)
+fi
+
+if [ -f /stk/SERVER_PASSWORD ]
+then
+  SERVER_PASSWORD=$(cat /stk/SERVER_PASSWORD)
+fi
+
+
 
 # Check for Secrets in subfolder provided by Kubernetes
 if [ -f /stk/secrets/username ]
@@ -34,6 +50,19 @@ if [ -f /stk/secrets/server_password ]
 then
   SERVER_PASSWORD=$(cat /stk/secrets/server_password)
 fi
+if [ -f /stk/secrets/USERNAME ]
+then
+  USERNAME=$(cat /stk/secrets/USERNAME)
+fi
+
+if [ -f /stk/secrets/PASSWORD ]
+then
+  PASSWORD=$(cat /stk/secrets/PASSWORD)
+fi
+
+if [ -f /stk/secrets/SERVER_PASSWORD ]
+then
+  SERVER_PASSWORD=$(cat /stk/secrets/SERVER_PASSWORD)
 
 
 
