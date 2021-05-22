@@ -63,7 +63,7 @@ fi
 if [ -f /stk/secrets/SERVER_PASSWORD ]
 then
   SERVER_PASSWORD=$(cat /stk/secrets/SERVER_PASSWORD)
-
+fi
 
 
 
