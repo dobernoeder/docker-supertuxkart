@@ -76,7 +76,15 @@ fi
 # Start the server
 if [ -n ${SERVER_PASSWORD} ]
 then
-    ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --server-password=${SERVER_PASSWORD}")
+    nr=$(cat /stk/server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
+    if [[ -n ${nr} ]]
+    then
+       sed -i "/^\s*<private-server-password/c\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /stk/server_active_config.xml
+    else
+       nr=$(cat /stk/server_active_config.xml | wc -l)
+       nr=$(( $nr - 2 ))
+       sed -i "${nr}i\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /stk/server_active_config.xml
+    fi
 fi
 
-supertuxkart --server-config=/stk/server_config.xml "${ADDITIONAL_PARAMETERS}"
+supertuxkart --server-config=/stk/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
