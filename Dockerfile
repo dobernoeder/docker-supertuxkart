@@ -61,4 +61,4 @@ EXPOSE 2757
 EXPOSE 2759
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["--server-config=/stk/server_config.xml"]
+CMD [""]

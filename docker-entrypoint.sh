@@ -8,6 +8,7 @@ else
   ADDITIONAL_PARAMETERS=""
 fi
 
+cp /stk/server_config.xml /stk/server_active_config.xml
 
 # Check for Secrets provided by Kubernetes
 if [ -f /stk/username ]
@@ -82,6 +83,7 @@ fi
 if [[ -n ${SERVER_PASSWORD} ]]
 then
     ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --server-password=${SERVER_PASSWORD}")
+    sed -i '/^\s*<private-server-password/d' /stk/server_active_config.xml
 fi
 
-supertuxkart "${ADDITIONAL_PARAMETERS}"
+supertuxkart --server-config=/stk/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
