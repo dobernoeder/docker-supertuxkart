@@ -3,11 +3,11 @@
 # -----------
 
 FROM ubuntu:20.04 AS build
-LABEL maintainer=jwestp
+LABEL maintainer=dobernoeder
 WORKDIR /stk
 
 # Set stk version that should be built
-ENV VERSION=1.1
+ENV VERSION=1.3-pre
 
 # Install build dependencies
 ARG DEBIAN_FRONTEND=noninteractive
@@ -24,8 +24,8 @@ RUN apt-get update && \
                        ca-certificates
 
 # Get code and assets
-RUN git clone --branch ${VERSION} --depth=1 https://github.com/supertuxkart/stk-code.git
-RUN svn checkout https://svn.code.sf.net/p/supertuxkart/code/stk-assets-release/${VERSION}/ stk-assets
+RUN git clone --branch master --depth=1 https://github.com/supertuxkart/stk-code.git
+RUN svn checkout https://svn.code.sf.net/p/supertuxkart/code/stk-assets/ stk-assets
 
 # Build server
 RUN mkdir stk-code/cmake_build && \
@@ -39,7 +39,7 @@ RUN mkdir stk-code/cmake_build && \
 # -----------
 
 FROM ubuntu:20.04
-LABEL maintainer=jwestp
+LABEL maintainer=dobernoeder
 WORKDIR /stk
 
 # Install libcurl dependency
@@ -61,3 +61,4 @@ EXPOSE 2757
 EXPOSE 2759
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["--server-config=/stk/server_config.xml"]

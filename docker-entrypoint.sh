@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-ADDITIONAL_PARAMETERS=""
+if [ ${#} -gt "0" ]
+then
+  ADDITIONAL_PARAMETERS="${@}"" "
+else
+  ADDITIONAL_PARAMETERS=""
+fi
+
 
 # Check for Secrets provided by Kubernetes
 if [ -f /stk/username ]
@@ -66,17 +72,16 @@ then
 fi
 
 
-
 # Log in with username and password if given
-if [ -n ${USERNAME} -a -n ${PASSWORD} ]
+if [[ -n ${USERNAME} && -n ${PASSWORD} ]]
 then
     ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --init-user --login=${USERNAME} --password=${PASSWORD}")
 fi
 
 # Start the server
-if [ -n ${SERVER_PASSWORD} ]
+if [[ -n ${SERVER_PASSWORD} ]]
 then
     ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --server-password=${SERVER_PASSWORD}")
 fi
 
-supertuxkart --server-config=/stk/server_config.xml "${ADDITIONAL_PARAMETERS}"
+supertuxkart "${ADDITIONAL_PARAMETERS}"
