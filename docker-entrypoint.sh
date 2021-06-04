@@ -8,7 +8,7 @@ else
   ADDITIONAL_PARAMETERS=""
 fi
 
-cp /stk/server_config.xml /stk/server_active_config.xml
+cp /stk/server_config.xml /tmp/server_active_config.xml
 
 # Check for Secrets provided by Kubernetes
 if [ -f /stk/username ]
@@ -82,15 +82,15 @@ fi
 # Start the server
 if [[ -n ${SERVER_PASSWORD} ]]
 then
-    nr=$(cat server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
+    nr=$(cat /tmp/server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
     if [[ -n ${nr} ]]
     then
-       sed -i "/^\s*<private-server-password/c\    <private-server-password value=\"${SERVER_PASSWORD}\" />" server_active_config.xml
+       sed -i "/^\s*<private-server-password/c\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /tmp/server_active_config.xml
     else 
-       nr=$(cat server_active_config.xml | wc -l)
+       nr=$(cat /tmp/server_active_config.xml | wc -l)
        nr=$(( $nr - 2 ))
-       sed -i "${nr}i\    <private-server-password value=\"${SERVER_PASSWORD}\" />" server_active_config.xml
+       sed -i "${nr}i\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /tmp/server_active_config.xml
     fi
 fi
 
-supertuxkart --server-config=/stk/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
+supertuxkart --server-config=/tmp/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
