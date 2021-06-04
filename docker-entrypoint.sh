@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
 
-ADDITIONAL_PARAMETERS=""
+if [ ${#} -gt "0" ]
+then
+  ADDITIONAL_PARAMETERS="${@}"" "
+else
+  ADDITIONAL_PARAMETERS=""
+fi
+
+cp /stk/server_config.xml /stk/server_active_config.xml
 
 # Check for Secrets provided by Kubernetes
 if [ -f /stk/username ]
@@ -66,24 +73,23 @@ then
 fi
 
 
-
 # Log in with username and password if given
-if [ -n ${USERNAME} -a -n ${PASSWORD} ]
+if [[ -n ${USERNAME} && -n ${PASSWORD} ]]
 then
     ADDITIONAL_PARAMETERS=$(echo "$ADDITIONAL_PARAMETERS --init-user --login=${USERNAME} --password=${PASSWORD}")
 fi
 
 # Start the server
-if [ -n ${SERVER_PASSWORD} ]
+if [[ -n ${SERVER_PASSWORD} ]]
 then
-    nr=$(cat /stk/server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
+    nr=$(cat server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
     if [[ -n ${nr} ]]
     then
-       sed -i "/^\s*<private-server-password/c\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /stk/server_active_config.xml
-    else
-       nr=$(cat /stk/server_active_config.xml | wc -l)
+       sed -i "/^\s*<private-server-password/c\    <private-server-password value=\"${SERVER_PASSWORD}\" />" server_active_config.xml
+    else 
+       nr=$(cat server_active_config.xml | wc -l)
        nr=$(( $nr - 2 ))
-       sed -i "${nr}i\    <private-server-password value=\"${SERVER_PASSWORD}\" />" /stk/server_active_config.xml
+       sed -i "${nr}i\    <private-server-password value=\"${SERVER_PASSWORD}\" />" server_active_config.xml
     fi
 fi
 
