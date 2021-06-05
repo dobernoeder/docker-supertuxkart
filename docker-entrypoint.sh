@@ -80,7 +80,7 @@ then
 fi
 
 # Start the server
-if [[ -n ${SERVER_PASSWORD} ]]
+if [[ -n ${SERVER_PASSWORD} && ! -n ${IS_KI_SERVER} ]]
 then
     nr=$(cat /tmp/server_active_config.xml | grep -n private-server-password | cut -d':' -f1)
     if [[ -n ${nr} ]]
@@ -93,4 +93,17 @@ then
     fi
 fi
 
-supertuxkart --server-config=/tmp/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
+if [[ -n ${IS_KI_SERVER} ]]
+then
+  if [[ -n ${KI_COUNT} ]]
+  then
+    KI_COUNT=3
+  fi
+  if [[ -n ${SERVER_ADDRESS} ]] 
+  then
+    SERVER_ADDRESS="127.0.0.1:2759"
+  fi
+  supertuxkart --network-ai=${KI_COUNT} --connect-now=${SERVER_ADDRESS} --server-password=${SERVER_PASSWORD}
+else
+  supertuxkart --server-config=/tmp/server_active_config.xml "${ADDITIONAL_PARAMETERS}"
+fi
