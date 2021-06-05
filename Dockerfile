@@ -3,7 +3,7 @@
 # -----------
 
 FROM ubuntu:20.04 AS build
-LABEL maintainer=jwestp
+LABEL maintainer=dobernoeder
 WORKDIR /stk
 
 # Set stk version that should be built
@@ -39,7 +39,7 @@ RUN mkdir stk-code/cmake_build && \
 # -----------
 
 FROM ubuntu:20.04
-LABEL maintainer=jwestp
+LABEL maintainer=dobernoeder
 WORKDIR /stk
 
 # Install libcurl dependency
