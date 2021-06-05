@@ -93,7 +93,7 @@ then
     fi
 fi
 
-if [[ upper(${IS_KI_SERVER}) = "TRUE" ]]
+if [[ ${IS_KI_SERVER^^} = "TRUE" ]]
 then
   if [[ -n ${KI_COUNT} ]]
   then
