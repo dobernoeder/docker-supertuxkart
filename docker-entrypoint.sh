@@ -93,13 +93,13 @@ then
     fi
 fi
 
-if [[ -n ${IS_KI_SERVER} ]]
+if [[ ${IS_KI_SERVER^^} = "TRUE" ]]
 then
   if [[ -n ${KI_COUNT} ]]
   then
     KI_COUNT=3
   fi
-  if [[ -n ${SERVER_ADDRESS} ]] 
+  if [[ ! -n ${SERVER_ADDRESS} ]]
   then
     SERVER_ADDRESS="127.0.0.1:2759"
   fi
